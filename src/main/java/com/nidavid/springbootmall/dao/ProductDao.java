@@ -1,13 +1,12 @@
 package com.nidavid.springbootmall.dao;
 
-import com.nidavid.springbootmall.constant.ProductCategory;
 import com.nidavid.springbootmall.dto.ProductRequest;
 import com.nidavid.springbootmall.model.Product;
 
 import java.util.List;
 
 public interface ProductDao {
-    List<Product> getProducts(ProductCategory category, String search);
+    List<Product> getProducts(ProductQueryParams productQueryParams);
 
     Product getProductById(Integer productId);
 
