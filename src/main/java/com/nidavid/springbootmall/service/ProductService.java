@@ -1,6 +1,6 @@
 package com.nidavid.springbootmall.service;
 
-import com.nidavid.springbootmall.dao.ProductQueryParams;
+import com.nidavid.springbootmall.dto.ProductQueryParams;
 import com.nidavid.springbootmall.dto.ProductRequest;
 import com.nidavid.springbootmall.model.Product;
 

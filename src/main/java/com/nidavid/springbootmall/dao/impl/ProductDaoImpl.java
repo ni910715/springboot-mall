@@ -1,13 +1,11 @@
 package com.nidavid.springbootmall.dao.impl;
 
-import com.nidavid.springbootmall.constant.ProductCategory;
 import com.nidavid.springbootmall.dao.ProductDao;
-import com.nidavid.springbootmall.dao.ProductQueryParams;
+import com.nidavid.springbootmall.dto.ProductQueryParams;
 import com.nidavid.springbootmall.dto.ProductRequest;
 import com.nidavid.springbootmall.model.Product;
 import com.nidavid.springbootmall.rowmapper.ProductRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

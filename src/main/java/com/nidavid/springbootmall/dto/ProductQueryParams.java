@@ -1,4 +1,4 @@
-package com.nidavid.springbootmall.dao;
+package com.nidavid.springbootmall.dto;
 
 import com.nidavid.springbootmall.constant.ProductCategory;
 

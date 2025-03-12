@@ -25,7 +25,7 @@ public class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
