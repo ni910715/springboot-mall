@@ -1,11 +1,16 @@
 package com.nidavid.springbootmall.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 public class User {
     private Integer userId;
     private String email;
+
+    @JsonIgnore //隱藏回傳此變數給前端
     private String password;
+
     private Date createdDate;
     private Date lastModifiedDate;
 
