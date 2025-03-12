@@ -1,6 +1,7 @@
 package com.nidavid.springbootmall.service.impl;
 
 import com.nidavid.springbootmall.dao.UserDao;
+import com.nidavid.springbootmall.dto.UserLoginRequest;
 import com.nidavid.springbootmall.dto.UserRegisterRequest;
 import com.nidavid.springbootmall.model.User;
 import com.nidavid.springbootmall.service.UserService;
@@ -35,5 +36,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Integer userId) {
         return userDao.getUserById(userId);
+    }
+
+    @Override
+    public User login(UserLoginRequest userLoginRequest) {
+        User user = userDao.getUserByEmail(userLoginRequest.getEmail());
+
+        if (user == null) {
+            log.warn("該 email {} 尚未被註冊", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        if (user.getPassword().equals(userLoginRequest.getPassword())) { //一定要使用 equals 比較，不可用 ==
+            return user;
+        } else {
+            log.warn("email {} 的密碼不正確", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
