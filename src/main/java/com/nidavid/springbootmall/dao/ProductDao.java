@@ -4,6 +4,7 @@ import com.nidavid.springbootmall.dto.ProductQueryParams;
 import com.nidavid.springbootmall.dto.ProductRequest;
 import com.nidavid.springbootmall.model.Product;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ProductDao {
@@ -14,6 +15,7 @@ public interface ProductDao {
     Product getProductById(Integer productId);
 
     Integer createProduct(ProductRequest productRequest);
+    void createDiscount(Integer productId, Integer discountPrice, Date startTime, Date endTime);
 
     void updateProduct(Integer productId, ProductRequest productRequest);
 

@@ -64,8 +64,8 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Product getProductById(Integer productId) {
         String sql = "SELECT product.product_id, product_name, category, image_url, price, stock, " +
-                "description, created_date, last_modified_date " +
-                "FROM product WHERE product_id = :productId";
+                "description, created_date, last_modified_date, discount.discount_price, discount.start_time, discount.end_time " +
+                "FROM product LEFT JOIN discount ON product.product_id = discount.product_id WHERE product.product_id = :productId";
 
         Map<String, Object> map = new HashMap<>();
         map.put("productId", productId);
@@ -104,6 +104,21 @@ public class ProductDaoImpl implements ProductDao {
         int productId = keyHolder.getKey().intValue();
 
         return productId;
+    }
+
+    //建立折扣
+    @Override
+    public void createDiscount(Integer productId, Integer discountPrice, Date startTime, Date endTime) {
+        String sql = "INSERT INTO Discount(product_id, discount_price, start_time, end_time)" +
+                "VALUES (:productId, :discountPrice, :startTime, :endTime)";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+        map.put("discountPrice", discountPrice);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+
+        namedParameterJdbcTemplate.update(sql, map);
     }
 
     @Override

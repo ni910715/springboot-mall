@@ -32,7 +32,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Integer createProduct(ProductRequest productRequest) {
-        return productDao.createProduct(productRequest);
+        Integer productId = productDao.createProduct(productRequest);
+
+        if (productRequest.getDiscountPrice() != null && productRequest.getStartTime() != null && productRequest.getEndTime() != null) {
+            productDao.createDiscount(productId, productRequest.getDiscountPrice(), productRequest.getStartTime(), productRequest.getEndTime());
+        }
+
+        return productId;
     }
 
     @Override

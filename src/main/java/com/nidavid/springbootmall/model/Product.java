@@ -15,6 +15,11 @@ public class Product {
     private Date createdTime;
     private Date lastModifiedDate;
 
+    //discount
+    private Integer discountPrice;
+    private Date startTime;
+    private Date endTime;
+
     public Date getLastModifiedDate() {
         return lastModifiedDate;
     }
@@ -85,5 +90,29 @@ public class Product {
 
     public void setProductId(Integer productId) {
         this.productId = productId;
+    }
+
+    public Integer getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public void setDiscountPrice(Integer discountPrice) {
+        this.discountPrice = discountPrice;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }
