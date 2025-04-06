@@ -10,6 +10,9 @@ public class ProductQueryParams {
     private Integer limit;
     private Integer offset;
 
+    //Discount
+    private Boolean onlyDiscount;
+
     public ProductCategory getCategory() {
         return category;
     }
@@ -57,4 +60,8 @@ public class ProductQueryParams {
     public void setOffset(Integer offset) {
         this.offset = offset;
     }
+
+    public Boolean getOnlyDiscount() {return onlyDiscount;}
+
+    public void setOnlyDiscount(Boolean onlyDiscount) {this.onlyDiscount = onlyDiscount;}
 }

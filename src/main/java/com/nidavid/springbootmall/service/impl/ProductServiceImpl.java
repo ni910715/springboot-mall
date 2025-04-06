@@ -7,6 +7,7 @@ import com.nidavid.springbootmall.model.Product;
 import com.nidavid.springbootmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,19 +32,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Integer createProduct(ProductRequest productRequest) {
         Integer productId = productDao.createProduct(productRequest);
 
         if (productRequest.getDiscountPrice() != null && productRequest.getStartTime() != null && productRequest.getEndTime() != null) {
-            productDao.createDiscount(productId, productRequest.getDiscountPrice(), productRequest.getStartTime(), productRequest.getEndTime());
+            productDao.createDiscount(productId, productRequest);
         }
 
         return productId;
     }
 
     @Override
+    @Transactional
     public void updateProduct(Integer productId, ProductRequest productRequest) {
         productDao.updateProduct(productId, productRequest);
+
+        if (productRequest.getDiscountPrice() != null && productRequest.getStartTime() != null && productRequest.getEndTime() != null) {
+            if (productDao.hasDiscount(productId)) {
+                productDao.updateDiscount(productId, productRequest);
+            } else {
+                productDao.createDiscount(productId, productRequest);
+            }
+        }
     }
 
     @Override

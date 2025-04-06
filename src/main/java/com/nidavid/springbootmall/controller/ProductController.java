@@ -30,6 +30,9 @@ public class ProductController {
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search,
 
+            //Discount
+            @RequestParam(required = false) Boolean discount,
+
             //排序
             @RequestParam(defaultValue = "created_date") String orderBy,
             @RequestParam(defaultValue = "desc") String sort,
@@ -41,6 +44,7 @@ public class ProductController {
         ProductQueryParams productQueryParams = new ProductQueryParams();
         productQueryParams.setCategory(category);
         productQueryParams.setSearch(search);
+        productQueryParams.setOnlyDiscount(discount);
         productQueryParams.setOrderBy(orderBy);
         productQueryParams.setSort(sort);
         productQueryParams.setLimit(limit);

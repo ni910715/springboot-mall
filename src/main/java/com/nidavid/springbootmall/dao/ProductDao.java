@@ -15,9 +15,12 @@ public interface ProductDao {
     Product getProductById(Integer productId);
 
     Integer createProduct(ProductRequest productRequest);
-    void createDiscount(Integer productId, Integer discountPrice, Date startTime, Date endTime);
+    void createDiscount(Integer productId, ProductRequest productRequest);
 
     void updateProduct(Integer productId, ProductRequest productRequest);
+
+    Boolean hasDiscount(Integer productId);
+    void updateDiscount(Integer productId, ProductRequest productRequest);
 
     void deleteProductById(Integer productId);
 

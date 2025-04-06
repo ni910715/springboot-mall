@@ -25,7 +25,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Integer countProduct(ProductQueryParams productQueryParams) {
-        String sql = "SELECT COUNT(*) FROM product WHERE 1=1";
+        String sql = "SELECT COUNT(*) FROM product LEFT JOIN discount ON product.product_id = discount.product_id WHERE 1=1";
 
         Map<String, Object> map = new HashMap<>();
 
@@ -40,8 +40,8 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> getProducts(ProductQueryParams productQueryParams) {
         String sql = "SELECT product.product_id, product_name, category, image_url, price, stock, " +
-                "description, created_date, last_modified_date " +
-                "FROM product WHERE 1=1";
+                "description, created_date, last_modified_date , discount.discount_price, discount.start_time, discount.end_time " +
+                "FROM product LEFT JOIN discount ON product.product_id = discount.product_id WHERE 1=1";
 
         Map<String, Object> map = new HashMap<>();
 
@@ -108,15 +108,15 @@ public class ProductDaoImpl implements ProductDao {
 
     //建立折扣
     @Override
-    public void createDiscount(Integer productId, Integer discountPrice, Date startTime, Date endTime) {
+    public void createDiscount(Integer productId, ProductRequest productRequest) {
         String sql = "INSERT INTO Discount(product_id, discount_price, start_time, end_time)" +
                 "VALUES (:productId, :discountPrice, :startTime, :endTime)";
 
         Map<String, Object> map = new HashMap<>();
         map.put("productId", productId);
-        map.put("discountPrice", discountPrice);
-        map.put("startTime", startTime);
-        map.put("endTime", endTime);
+        map.put("discountPrice", productRequest.getDiscountPrice());
+        map.put("startTime", productRequest.getStartTime());
+        map.put("endTime", productRequest.getEndTime());
 
         namedParameterJdbcTemplate.update(sql, map);
     }
@@ -142,6 +142,21 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public void updateDiscount(Integer productId, ProductRequest productRequest) {
+        String sql = "UPDATE discount SET discount.product_id = :productId, discount_price = :discountPrice, " +
+                "start_time = :startTime, end_time = :endTime " +
+                "WHERE discount.product_id = :productId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+        map.put("discountPrice", productRequest.getDiscountPrice());
+        map.put("startTime", productRequest.getStartTime());
+        map.put("endTime", productRequest.getEndTime());
+
+        namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    @Override
     public void deleteProductById(Integer productId) {
         String sql = "DELETE FROM product WHERE product_id = :productId";
 
@@ -152,13 +167,20 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     private String addFilteringSql(String sql, Map<String, Object> map, ProductQueryParams productQueryParams){
-        if(productQueryParams.getCategory() != null) {
+        if (productQueryParams.getCategory() != null) {
             sql = sql + " AND category = :category";//AND 前須留一個空格，避免字串年在一起
             map.put("category", productQueryParams.getCategory().name()); //category 是 Enum 類型，所以需轉換成 String
         }
-        if(productQueryParams.getSearch() != null) {
+        if (productQueryParams.getSearch() != null) {
             sql = sql + " AND product_name Like :search";
             map.put("search", "%" + productQueryParams.getSearch() + "%");
+        }
+
+        //只搜尋有discount商品
+        if (Boolean.TRUE.equals(productQueryParams.getOnlyDiscount())) {
+            sql = sql + " AND discount.discount_price IS NOT NULL " +
+                    " AND discount.start_time <= NOW() " +
+                    " AND discount.end_time >= NOW() ";
         }
         return sql;
     }
@@ -175,5 +197,17 @@ public class ProductDaoImpl implements ProductDao {
         map.put("lastModifiedDate", new Date());
 
         namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    @Override
+    public Boolean hasDiscount(Integer productId) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM discount WHERE product_id = :productId)";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+
+        Boolean result = namedParameterJdbcTemplate.queryForObject(sql, map, Boolean.class);
+
+        return result;
     }
 }
